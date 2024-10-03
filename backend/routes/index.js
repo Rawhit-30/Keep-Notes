@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var User = require("../models/userModel");
-var bcrypt = require('bcryptjs');
-var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');  // Library for hashing passwords
+var jwt = require('jsonwebtoken');  // Library for generating JSON Web Tokens (JWT)
 const noteModel = require('../models/noteModel');
-const multer = require('multer');
+
 const userModel = require('../models/userModel');
-const path = require("path");
-const fs = require("fs");
-const e = require('express');
+const path = require("path");  // Core module for working with file and directory paths
+const fs = require("fs");   // Core module for working with the file system
+
 
 let secret = "secret";
 

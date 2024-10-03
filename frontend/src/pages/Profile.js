@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Note from '../components/Note';
 import Footer from '../components/Footer';
@@ -77,59 +77,69 @@ const Profile = () => {
     getNotes();
   }, []);
 
+  const handleDeleteNote = (id) => {
+    setNotes((prevNotes) => prevNotes.filter(note => note._id !== id));
+    setImportantNotes((prevImportantNotes) => prevImportantNotes.filter(note => note._id !== id));
+    setNormalNotes((prevNormalNotes) => prevNormalNotes.filter(note => note._id !== id));
+  };
+
   return (
     <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex items-center justify-between w-screen h-[300px] px-[50px]">
-        <div className="flex items-center gap-4">
-          <div className="profileCircle w-[150px] h-[150px] rounded-full bg-gray-300">
-            {profilePic && <img src={profilePic} alt="Profile" className="w-full h-full rounded-full object-cover" />}
+      <div className="flex-grow px-[50px] py-4">
+        <div className="flex items-center justify-between w-full h-[300px]">
+          <div className="flex items-center gap-4">
+            <div className="profileCircle w-[150px] h-[150px] rounded-full bg-gray-300">
+              {profilePic && <img src={profilePic} alt="Profile" className="w-full h-full rounded-full object-cover" />}
+            </div>
+            <div>
+              <h3 className='text-[23px]'>{userDetails ? userDetails.name : ""}</h3>
+              <p className='text-gray-500 text-[15px]'>Joined In {userDetails ? new Date(userDetails.date).toDateString() : ""}</p>
+            </div>
           </div>
-          <div>
-            <h3 className='text-[23px]'>{userDetails ? userDetails.name : ""}</h3>
-            <p className='text-gray-500 text-[15px]'>Joined In {userDetails ? new Date(userDetails.date).toDateString() : ""}</p>
+
+          <div className='relative h-[40%] pr-10'>
+            <div className='text-gray-500 mb-2'>
+              Total Notes: {notes.length || 0} | Important Notes: {importantNotes.length || 0}
+            </div>
+            <div className='mt-4 flex items-center gap-4 flex-wrap'>
+              <label className="btnNormal cursor-pointer">
+                {isPicUploaded ? "Update Picture" : "Add Pic"}
+                <input type="file" onChange={handlePicUpload} className="hidden" />
+              </label>
+              {isPicUploaded && (
+                <button className="btnNormal" onClick={handleRemovePic}>Remove Photo</button>
+              )}
+              <button className="btnNormal" onClick={() => navigate("/addNewNote")}>Add Note</button>
+            </div>
           </div>
         </div>
 
-        <div className='relative h-[40%] pr-10'>
-          <div className='text-gray-500 mb-2'>
-            Total Notes: {notes.length || 0} | Important Notes: {importantNotes.length || 0}
+        {/* Notes Section */}
+        <div className='w-full mt-4'>
+          <h3 className='text-[26px]'>Your <span className="text-[#578df5]">Important</span> Notes</h3>
+          <div className="gridItems grid grid-cols-1 gap-4 border border-gray-300 rounded-md p-4 mb-4">
+            {importantNotes.map((note, index) => (
+              <Note key={note._id} note={note} index={index} onDelete={handleDeleteNote} />
+            ))}
           </div>
-          {/* Move buttons below the note counts */}
-          <div className='mt-4 flex items-center gap-4 flex-wrap'>
-            <label className="btnNormal cursor-pointer">
-              {isPicUploaded ? "Update Picture" : "Add Pic"}
-              <input type="file" onChange={handlePicUpload} className="hidden" />
-            </label>
-            {isPicUploaded && (
-              <button className="btnNormal" onClick={handleRemovePic}>Remove Photo</button>
-            )}
-            <button className="btnNormal" onClick={() => navigate("/addNewNote")}>Add Note</button>
+
+          <h3 className='text-[26px]'>Your <span className="text-[#578df5]">Normal</span> Notes</h3>
+          <div className="gridItems grid grid-cols-1 gap-4 border border-gray-300 rounded-md p-4 mb-4">
+            {normalNotes.map((note, index) => (
+              <Note key={note._id} note={note} index={index} onDelete={handleDeleteNote} />
+            ))}
           </div>
         </div>
       </div>
 
-      <div className='w-screen px-[50px]'>
-        <h3 className='text-[26px]'>Your <span className="text-[#578df5]">Important</span> Notes</h3>
-      </div>
-      <div className="gridItems grid grid-cols-1 gap-4 px-[50px] border border-gray-300 rounded-md p-4">
-        {importantNotes.map((note, index) => (
-          <Note key={note._id} note={note} index={index} />
-        ))}
-      </div>
-
-      <div className='w-screen px-[50px] mt-4'>
-        <h3 className='text-[26px]'>Your <span className="text-[#578df5]">Normal</span> Notes</h3>
-      </div>
-      <div className="gridItems grid grid-cols-1 gap-4 px-[50px] border border-gray-300 rounded-md p-4 mb-3">
-        {normalNotes.map((note, index) => (
-          <Note key={note._id} note={note} index={index} />
-        ))}
-      </div>
-
-      <Footer />
+      {/* Footer Below Notes Section */}
+      
+    </div>
+    <Footer />
     </>
   );
-}
+};
 
 export default Profile;

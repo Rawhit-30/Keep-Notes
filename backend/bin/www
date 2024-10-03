@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+//  shebang line tells the os to use node.js to execute this file 
 
 /**
  * Module dependencies.

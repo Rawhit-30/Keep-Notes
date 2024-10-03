@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; // Import Navigate for redirection
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from './pages/Home';
 import NoPage from './pages/NoPage';
 import SignUp from './pages/SignUp';
@@ -12,7 +12,13 @@ import SingleNotePage from './pages/SingleNotePage';
 import EditNote from './pages/EditNote';
 
 const App = () => {
-  const isAuthenticated = localStorage.getItem("token") !== null; // Check if token exists
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check authentication status by looking for the token in localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token); // Convert token to boolean (true/false)
+  }, []); // Runs once on component mount
 
   return (
     <BrowserRouter>
